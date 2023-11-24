@@ -1,0 +1,20 @@
+en 
+conf t
+vlan 15
+name VLAN15
+vlan 25
+name VLAN25
+
+interface fastethernet0/2
+switchport mode access
+switchport access vlan 15
+exit
+
+interface fastethernet0/3
+switchport mode access
+switchport access vlan 25
+exit
+
+interface fastethernet0/1
+switchport mode trunk
+exit
