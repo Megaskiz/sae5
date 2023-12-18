@@ -1,0 +1,1 @@
+sudo docker run -it --rm --init --net host -v "$(pwd)/data/":/data networkboot/dhcpd <interface réseau>
