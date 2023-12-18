@@ -1,0 +1,4 @@
+zone "trisomie21.org" {
+    type master;
+    file "/etc/bind/db.local";
+};
