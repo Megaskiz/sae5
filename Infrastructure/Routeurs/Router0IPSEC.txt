@@ -1,0 +1,37 @@
+! Activer ISAKMP (IKE) sur Router 0
+crypto isakmp enable
+
+! Configuration de la politique ISAKMP sur Router 0
+crypto isakmp policy 1
+	encryption aes
+	authentication pre-share
+	hash sha
+	group 2
+	lifetime 86400
+	exit
+
+! Configuration de la clé partagée sur Router 0
+crypto isakmp key CLESECRETE address 10.6.0.2
+
+! Configuration des transformations IPsec sur Router 0
+crypto ipsec transform-set MY_TRANSFORM_SET esp-aes esp-sha-hmac
+
+! Configuration de l'association de sécurité IPsec sur Router 0
+crypto ipsec security-association lifetime seconds 86400
+
+! Création d'une liste d'accès étendue sur Router 0
+ip access-list extended MY_ACL
+	permit ip 10.6.0.0 0.0.0.3 10.6.0.0 0.0.0.3
+	exit
+
+! Création d'une carte cryptographique sur Router 0
+crypto map MY_CRYPTO_MAP 1 ipsec-isakmp
+	match address MY_ACL
+	set peer 10.6.0.2
+	set transform-set MY_TRANSFORM_SET
+	exit
+
+! Application de la carte cryptographique sur l'interface externe de Router 0
+interface gigabitethernet 0/1
+	crypto map MY_CRYPTO_MAP
+	exit
